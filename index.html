@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StockWise — Inventory & Analytics</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-icon">S</span><div><strong>StockWise</strong><small>Inventory Suite</small></div></div>
+    <nav>
+      <a class="nav-link active" href="#overview">▦ <span>Overview</span></a>
+      <a class="nav-link" href="#inventory">▤ <span>Inventory</span></a>
+      <a class="nav-link" href="#analytics">◔ <span>Analytics</span></a>
+    </nav>
+    <div class="sidebar-bottom"><span class="live-dot"></span> Local demo mode <small>Data stays in this browser</small></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><p class="eyebrow">INVENTORY MANAGEMENT</p><h1>Dashboard</h1><p class="subheading">Monitor products, stock levels and business performance.</p></div>
+      <div class="top-actions"><span class="date-chip" id="todayLabel"></span><button class="btn btn-primary" id="addTopBtn">＋ Add product</button></div>
+    </header>
+
+    <section id="overview" class="stats-grid">
+      <article class="stat-card"><div class="stat-head"><span>Total products</span><span class="stat-icon purple">▤</span></div><strong id="totalProducts">0</strong><small id="productHint">Unique inventory items</small></article>
+      <article class="stat-card"><div class="stat-head"><span>Inventory value</span><span class="stat-icon blue">₹</span></div><strong id="inventoryValue">₹0</strong><small>Cost × quantity</small></article>
+      <article class="stat-card"><div class="stat-head"><span>Units in stock</span><span class="stat-icon green">▦</span></div><strong id="totalUnits">0</strong><small>Across all products</small></article>
+      <article class="stat-card"><div class="stat-head"><span>Low-stock alerts</span><span class="stat-icon orange">!</span></div><strong id="lowStockCount">0</strong><small>At or below reorder level</small></article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel inventory-panel" id="inventory">
+        <div class="panel-title"><div><h2>Product inventory</h2><p>Manage your catalog and stock quantities.</p></div><button class="btn btn-outline" id="exportBtn">↓ Export CSV</button></div>
+        <div class="toolbar">
+          <label class="search-box">⌕ <input id="searchInput" type="search" placeholder="Search product or category…"></label>
+          <select id="categoryFilter" aria-label="Filter by category"><option value="">All categories</option></select>
+          <select id="stockFilter" aria-label="Filter by stock"><option value="">All stock levels</option><option value="low">Low stock</option><option value="available">In stock</option><option value="out">Out of stock</option></select>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>PRODUCT</th><th>CATEGORY</th><th>PRICE</th><th>QUANTITY</th><th>STOCK STATUS</th><th>ACTIONS</th></tr></thead><tbody id="productRows"></tbody></table></div>
+        <div class="table-footer"><span id="resultCount">0 products</span><button class="text-btn" id="resetBtn">Reset demo data</button></div>
+      </article>
+      <aside class="right-column">
+        <article class="panel quick-panel"><div class="panel-title"><div><h2>Quick insights</h2><p>Automatic inventory checks</p></div><span class="insight-icon">✦</span></div><div id="insights" class="insights"></div></article>
+        <article class="panel category-panel"><div class="panel-title"><div><h2>Category value</h2><p>Inventory value by category</p></div></div><div class="chart-box"><canvas id="categoryChart"></canvas></div></article>
+      </aside>
+    </section>
+
+    <section class="panel analytics-panel" id="analytics">
+      <div class="panel-title"><div><h2>Inventory analytics</h2><p>Understand your stock mix and inventory value.</p></div><span class="badge">LIVE SUMMARY</span></div>
+      <div class="analytics-grid"><div class="chart-area"><h3>Stock quantity by category</h3><div class="large-chart"><canvas id="stockChart"></canvas></div></div><div class="summary-area"><h3>Financial summary</h3><div class="summary-row"><span>Total inventory cost</span><strong id="summaryValue">₹0</strong></div><div class="summary-row"><span>Average product price</span><strong id="averagePrice">₹0</strong></div><div class="summary-row"><span>Most valuable product</span><strong id="topProduct">—</strong></div><div class="summary-row"><span>Potential stock shortage</span><strong id="shortageValue">0 units</strong></div><p class="note">Values are calculated locally from the products currently listed.</p></div></div>
+    </section>
+    <footer>StockWise Inventory Suite <span>Educational capstone project · Front-end demo</span></footer>
+  </main>
+
+  <dialog id="productDialog">
+    <form id="productForm" method="dialog">
+      <div class="dialog-heading"><div><p class="eyebrow">PRODUCT CATALOG</p><h2 id="dialogTitle">Add product</h2></div><button type="button" class="close-btn" id="closeDialog" aria-label="Close">×</button></div>
+      <input type="hidden" id="editId">
+      <div class="form-grid">
+        <label>Product name<input id="productName" required maxlength="70" placeholder="e.g. Wireless keyboard"></label>
+        <label>Category<input id="productCategory" required maxlength="40" placeholder="e.g. Electronics"></label>
+        <label>Unit price (₹)<input id="productPrice" required type="number" min="0.01" step="0.01" placeholder="799"></label>
+        <label>Quantity<input id="productQuantity" required type="number" min="0" step="1" placeholder="25"></label>
+        <label>Reorder level<input id="productReorder" required type="number" min="0" step="1" value="5"></label>
+      </div>
+      <p class="form-hint">Low-stock alerts appear when quantity is at or below the reorder level.</p>
+      <div class="dialog-actions"><button type="button" class="btn btn-outline" id="cancelDialog">Cancel</button><button type="submit" class="btn btn-primary">Save product</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
